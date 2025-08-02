@@ -1,6 +1,6 @@
 ![](../../workflows/gds/badge.svg) ![](../../workflows/docs/badge.svg) ![](../../workflows/test/badge.svg) ![](../../workflows/fpga/badge.svg)
 
-# Baby VGA Peripheral for Tiny Tapeout
+# Baby VGA Peripheral for TinyQV
 
 - [Read the documentation for project](docs/info.md)
 
