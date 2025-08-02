@@ -3,7 +3,6 @@
 module rot_register (
     input  wire       clk,
     input  wire       rst_n,
-    input  wire [2:0] counter,
     input  wire [3:0] data_in,
     input  wire       set_data,
     output wire [3:0] data_out

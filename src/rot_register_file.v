@@ -6,7 +6,6 @@
 module rot_register_file (
     input  wire                  clk,
     input  wire                  rst_n,
-    input  wire            [2:0] counter,
     input  wire [`ADDR_BITS-1:0] r1_addr,
     input  wire [`ADDR_BITS-1:0] r2_addr,
     input  wire [`ADDR_BITS-1:0] w_addr,
@@ -23,7 +22,6 @@ generate genvar i;
         rot_register rr (
             .clk,
             .rst_n,
-            .counter,
             .data_in,
             .set_data(set_data & (w_addr == i)),
             .data_out(rr_data_out[i])

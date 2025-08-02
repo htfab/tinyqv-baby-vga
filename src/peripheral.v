@@ -112,4 +112,6 @@ end
 assign uo_out = {vga_hsync, pixel, pixel, pixel, vga_vsync, pixel, pixel, pixel};
 assign user_interrupt = 1'b0;
 
+wire _unused = &{ui_in, address[1:0], vga_x_hi[5], vga_x_lo[5:3], vga_y_hi[4], vga_y_lo, 1'b0};
+
 endmodule

@@ -28,7 +28,6 @@ wire [2:0] counter_shifted = counter + 2;
 rot_register_file rrf (
     .clk,
     .rst_n,
-    .counter,
     .r1_addr,
     .r2_addr,
     .w_addr(w_addr_saved),
