@@ -4,7 +4,7 @@ module vga_timing (
     input wire clk,
     input wire rst_n,
     output reg [5:0] x_hi,
-    output reg [5:0] x_lo,
+    output reg [4:0] x_lo,
     output reg [4:0] y_hi,
     output reg [5:0] y_lo,
     output reg hsync,
@@ -12,19 +12,19 @@ module vga_timing (
     output wire blank
 );
 
-// 720p 60Hz CVT-RB (64 MHz pixel clock)
+// 1024x768 60Hz CVT (63.5 MHz pixel clock, rounded to 64 MHz) - courtesy of RebelMike
 
-`define H_ROLL   39
-`define H_FPORCH (32 * 64)
-`define H_SYNC   (33 * 64 + 8)
-`define H_BPORCH (34 * 64)
-`define H_NEXT   (35 * 64 + 39)
+`define H_ROLL   31
+`define H_FPORCH (32 * 32)
+`define H_SYNC   (33 * 32 + 16)
+`define H_BPORCH (36 * 32 + 24)
+`define H_NEXT   (41 * 32 + 15)
 
-`define V_ROLL   44
+`define V_ROLL   47
 `define V_FPORCH (16 * 64)
 `define V_SYNC   (16 * 64 + 3)
-`define V_BPORCH (16 * 64 + 8)
-`define V_NEXT   (16 * 64 + 20)
+`define V_BPORCH (16 * 64 + 7)
+`define V_NEXT   (16 * 64 + 29)
 
 always @(posedge clk) begin
     if (!rst_n) begin
@@ -56,7 +56,7 @@ always @(posedge clk) begin
             end
         end
         hsync <= ({x_hi, x_lo} >= `H_SYNC && {x_hi, x_lo} < `H_BPORCH);
-        vsync <= !({y_hi, y_lo} >= `V_SYNC && {y_hi, y_lo} < `V_BPORCH);
+        vsync <= ({y_hi, y_lo} >= `V_SYNC && {y_hi, y_lo} < `V_BPORCH);
     end
 end
 

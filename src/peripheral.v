@@ -32,7 +32,7 @@ module tqvp_htfab_baby_vga (
 );
 
 wire [5:0] vga_x_hi;
-wire [5:0] vga_x_lo;
+wire [4:0] vga_x_lo;
 wire [4:0] vga_y_hi;
 wire [5:0] vga_y_lo;
 wire vga_hsync;
@@ -112,6 +112,6 @@ end
 assign uo_out = {vga_hsync, pixel, pixel, pixel, vga_vsync, pixel, pixel, pixel};
 assign user_interrupt = 1'b0;
 
-wire _unused = &{ui_in, address[1:0], vga_x_hi[5], vga_x_lo[5:3], vga_y_hi[4], vga_y_lo, 1'b0};
+wire _unused = &{ui_in, address[1:0], vga_x_hi[5], vga_x_lo[4:3], vga_y_hi[4], vga_y_lo, 1'b0};
 
 endmodule
