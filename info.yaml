@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title:        ""      # Project title
-  author:       ""      # Your name
-  discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  ""      # One line description of what your project does
+  title:        "Baby VGA peripheral for TinyQV"      # Project title
+  author:       "htfab"        # Your name
+  discord:      "h.tamas"      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
+  description:  "Implements a VGA peripheral with a 32x16 resolution framebuffer"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     64000000  # Clock frequency in Hz (or 0 if not applicable)
 
@@ -17,6 +17,10 @@ project:
   # Source files must be in ./src and you must list each source file separately, one per line.
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
+    - "rot_register.v"
+    - "rot_register_file.v"
+    - "framebuffer.v"
+    - "vga_timing.v"
     - "peripheral.v"
     - "tt_wrapper.v"
     - "test_harness/falling_edge_detector.sv"
@@ -40,14 +44,14 @@ pinout:
   ui[7]: ""
 
   # Outputs
-  uo[0]: ""
-  uo[1]: ""
-  uo[2]: ""
-  uo[3]: ""
-  uo[4]: ""
-  uo[5]: ""
-  uo[6]: ""
-  uo[7]: ""
+  uo[0]: "Tiny VGA R1"
+  uo[1]: "Tiny VGA G1"
+  uo[2]: "Tiny VGA B1"
+  uo[3]: "Tiny VGA VSync"
+  uo[4]: "Ting VGA R0"
+  uo[5]: "Tiny VGA G0"
+  uo[6]: "Tiny VGA B0"
+  uo[7]: "Tiny VGA HSync"
 
   # Bidirectional pins
   uio[0]: "user_interrupt"
