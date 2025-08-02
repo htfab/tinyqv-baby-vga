@@ -3,50 +3,63 @@
 module vga_timing (
     input wire clk,
     input wire rst_n,
-    output reg [10:0] x,
-    output reg [9:0] y,
+    output reg [5:0] x_hi,
+    output reg [5:0] x_lo,
+    output reg [4:0] y_hi,
+    output reg [5:0] y_lo,
     output reg hsync,
     output reg vsync,
     output wire blank
 );
 
 // 720p 60Hz CVT-RB (64 MHz pixel clock)
-// restricted to 1025x513 area
 
-`define H_FPORCH 1025
-`define H_SYNC   1200
-`define H_BPORCH 1232
-`define H_NEXT   1439
+`define H_ROLL   39
+`define H_FPORCH (32 * 64)
+`define H_SYNC   (33 * 64 + 8)
+`define H_BPORCH (34 * 64)
+`define H_NEXT   (35 * 64 + 39)
 
-`define V_FPORCH 513
-`define V_SYNC   619
-`define V_BPORCH 624
-`define V_NEXT   740
+`define V_ROLL   44
+`define V_FPORCH (16 * 64)
+`define V_SYNC   (16 * 64 + 3)
+`define V_BPORCH (16 * 64 + 8)
+`define V_NEXT   (16 * 64 + 20)
 
 always @(posedge clk) begin
     if (!rst_n) begin
-        x <= 0;
-        y <= 0;
+        x_hi <= 0;
+        x_lo <= 0;
+        y_hi <= 0;
+        y_lo <= 0;
         hsync <= 0;
         vsync <= 0;
     end else begin
-        if (x == `H_NEXT) begin
-            x <= 0;
+        if ({x_hi, x_lo} == `H_NEXT) begin
+            x_hi <= 0;
+            x_lo <= 0;
+        end else if (x_lo == `H_ROLL) begin
+            x_hi <= x_hi + 1;
+            x_lo <= 0;
         end else begin
-            x <= x + 1;
+            x_lo <= x_lo + 1;
         end
-        if (x == `H_SYNC) begin
-            if(y == `V_NEXT) begin
-                y <= 0;
+        if ({x_hi, x_lo} == `H_SYNC) begin
+            if({y_hi, y_lo} == `V_NEXT) begin
+                y_hi <= 0;
+                y_lo <= 0;
+            end else if (y_lo == `V_ROLL) begin
+                y_hi <= y_hi + 1;
+                y_lo <= 0;
             end else begin
-                y <= y + 1;
+                y_lo <= y_lo + 1;
             end
         end
-        hsync <= (x >= `H_SYNC && x < `H_BPORCH);
-        vsync <= !(y >= `V_SYNC && y < `V_BPORCH);
+        hsync <= ({x_hi, x_lo} >= `H_SYNC && {x_hi, x_lo} < `H_BPORCH);
+        vsync <= !({y_hi, y_lo} >= `V_SYNC && {y_hi, y_lo} < `V_BPORCH);
     end
 end
 
-assign blank = (x >= `H_FPORCH || y >= `V_FPORCH);
+assign blank = ({x_hi, x_lo} >= `H_FPORCH || {y_hi, y_lo} >= `V_FPORCH);
 
 endmodule

@@ -31,8 +31,10 @@ module tqvp_htfab_baby_vga (
     output wire        user_interrupt  // Dedicated interrupt request for this peripheral
 );
 
-wire [10:0] vga_x;
-wire [9:0] vga_y;
+wire [5:0] vga_x_hi;
+wire [5:0] vga_x_lo;
+wire [4:0] vga_y_hi;
+wire [5:0] vga_y_lo;
 wire vga_hsync;
 wire vga_vsync;
 wire vga_blank;
@@ -40,14 +42,16 @@ wire vga_blank;
 vga_timing vga (
     .clk,
     .rst_n,
-    .x(vga_x),
-    .y(vga_y),
+    .x_hi(vga_x_hi),
+    .x_lo(vga_x_lo),
+    .y_hi(vga_y_hi),
+    .y_lo(vga_y_lo),
     .hsync(vga_hsync),
     .vsync(vga_vsync),
     .blank(vga_blank)
 );
 
-wire [2:0] counter = vga_x[2:0];
+wire [2:0] counter = vga_x_lo[2:0];
 
 reg [3:0] r1_addr;
 wire [31:0] pixel_line;
@@ -57,7 +61,7 @@ framebuffer fb (
     .rst_n,
     .counter,
     .r1_addr,
-    .r2_addr(vga_y[8:5]),
+    .r2_addr(vga_y_hi[3:0]),
     .w_addr(address[5:2]),
     .data_in,
     .set_data(data_write_n == 2'b10),
@@ -94,22 +98,18 @@ end
 assign data_ready = read_ready;
 
 reg pixel;
-reg grid;
 
 always @(posedge clk) begin
     if (!rst_n) begin
         pixel <= 1'b0;
-        grid <= 1'b0;
     end else if (vga_blank) begin
         pixel <= 1'b0;
-        grid <= 1'b0;
     end else begin
-        pixel <= pixel_line[vga_x[9:5]];
-        grid <= (vga_x[4:0] == 0) | (vga_y[4:0] == 0);
+        pixel <= pixel_line[vga_x_hi[4:0]];
     end
 end
 
-assign uo_out = {vga_hsync, grid, grid, grid, vga_vsync, pixel | grid, pixel | grid, pixel | grid};
+assign uo_out = {vga_hsync, pixel, pixel, pixel, vga_vsync, pixel, pixel, pixel};
 assign user_interrupt = 1'b0;
 
 endmodule
