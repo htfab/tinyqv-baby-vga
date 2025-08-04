@@ -55,7 +55,7 @@ always @(posedge clk) begin
                 y_lo <= y_lo + 1;
             end
         end
-        hsync <= ({x_hi, x_lo} >= `H_SYNC && {x_hi, x_lo} < `H_BPORCH);
+        hsync <= !({x_hi, x_lo} >= `H_SYNC && {x_hi, x_lo} < `H_BPORCH);
         vsync <= ({y_hi, y_lo} >= `V_SYNC && {y_hi, y_lo} < `V_BPORCH);
     end
 end
