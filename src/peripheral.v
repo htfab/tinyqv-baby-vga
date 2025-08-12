@@ -98,6 +98,8 @@ end
 assign data_ready = read_ready;
 
 reg pixel;
+reg hsync_buf;
+reg vsync_buf;
 
 always @(posedge clk) begin
     if (!rst_n) begin
@@ -107,9 +109,11 @@ always @(posedge clk) begin
     end else begin
         pixel <= pixel_line[vga_x_hi[4:0]];
     end
+    hsync_buf <= vga_hsync;
+    vsync_buf <= vga_vsync;
 end
 
-assign uo_out = {vga_hsync, pixel, pixel, pixel, vga_vsync, pixel, pixel, pixel};
+assign uo_out = {hsync_buf, pixel, pixel, pixel, vsync_buf, pixel, pixel, pixel};
 assign user_interrupt = 1'b0;
 
 wire _unused = &{ui_in, address[1:0], vga_x_hi[5], vga_x_lo[4:3], vga_y_hi[4], vga_y_lo, 1'b0};
