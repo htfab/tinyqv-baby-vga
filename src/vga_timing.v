@@ -9,7 +9,9 @@ module vga_timing (
     output reg [5:0] y_lo,
     output reg hsync,
     output reg vsync,
-    output wire blank
+    output wire blank,
+    output wire sti,
+    output wire cli
 );
 
 // 1024x768 60Hz CVT (63.5 MHz pixel clock, rounded to 64 MHz) - courtesy of RebelMike
@@ -61,5 +63,7 @@ always @(posedge clk) begin
 end
 
 assign blank = ({x_hi, x_lo} >= `H_FPORCH || {y_hi, y_lo} >= `V_FPORCH);
+assign sti = ({x_hi, x_lo} == `H_FPORCH && {y_hi, y_lo} == `V_FPORCH-1);
+assign cli = {y_hi, y_lo} == 0;
 
 endmodule
