@@ -1,0 +1,35 @@
+{
+    "default_part": "XC7A35TCPG236-1",
+    "values": {
+        "top": "fpga_top",
+        "read_verilog_args": ["-sv"]
+    },
+    "dependencies": {
+        "sources": [
+            "../../src/rot_register.v",
+            "../../src/rot_register_file.v",
+            "../../src/framebuffer.v",
+            "../../src/vga_timing.v",
+            "../../src/peripheral.v",
+            "../../src/tt_wrapper.v",
+            "../../src/test_harness/falling_edge_detector.sv",
+            "../../src/test_harness/rising_edge_detector.sv",
+            "../../src/test_harness/reclocking.sv",
+            "../../src/test_harness/spi_reg.sv",
+            "../../src/test_harness/synchronizer.sv",
+            "pll.v",
+            "fpga_top.v"
+        ],
+        "synth_log": "synth.log",
+        "pack_log": "pack.log"
+    },
+    "XC7A35TCPG236-1": {
+        "default_target": "bitstream",
+        "dependencies": {
+            "build_dir": "build/basys3",
+            "xdc": [
+                "basys3.xdc"
+            ]
+        }
+    }
+}
