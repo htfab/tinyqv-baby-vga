@@ -51,6 +51,7 @@ always @(posedge clk) begin
             if({y_hi, y_lo} == `V_NEXT) begin
                 y_hi <= 0;
                 y_lo <= 0;
+                interrupt <= 0;
             end else if (y_lo == `V_ROLL) begin
                 y_hi <= y_hi + 1;
                 y_lo <= 0;
@@ -63,9 +64,7 @@ always @(posedge clk) begin
         end
         hsync <= !({x_hi, x_lo} >= `H_SYNC && {x_hi, x_lo} < `H_BPORCH);
         vsync <= !({y_hi, y_lo} >= `V_SYNC && {y_hi, y_lo} < `V_BPORCH);
-        if (cli || {y_hi, y_lo} == 0) begin
-            interrupt <= 0;
-        end
+        if (cli) interrupt <= 0;
     end
 end
 
