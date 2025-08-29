@@ -51,12 +51,14 @@ always @(posedge clk) begin
             if({y_hi, y_lo} == `V_NEXT) begin
                 y_hi <= 0;
                 y_lo <= 0;
-                interrupt <= 1;
             end else if (y_lo == `V_ROLL) begin
                 y_hi <= y_hi + 1;
                 y_lo <= 0;
             end else begin
                 y_lo <= y_lo + 1;
+            end
+            if({y_hi, y_lo} == `V_FPORCH) begin
+                interrupt <= 1;
             end
         end
         hsync <= !({x_hi, x_lo} >= `H_SYNC && {x_hi, x_lo} < `H_BPORCH);
