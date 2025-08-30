@@ -43,7 +43,7 @@ reg [3:0] clk_div;
 
 vga_timing vga (
     .clk,
-    .rst_n(rst_n & user_rst_n[3]),
+    .rst_n(rst_n & user_rst_n[0]),
     .cli(vga_cli),
     .clk_div,
     .x_pos(vga_x_pos),
@@ -69,7 +69,7 @@ wire [31:0] pixel_line;
 
 framebuffer fb (
     .clk,
-    .rst_n(rst_n & user_rst_n[2]),
+    .rst_n(rst_n & user_rst_n[1]),
     .counter,
     .r1_addr,
     .r2_addr(vga_y_pos),
@@ -86,7 +86,7 @@ reg [3:0] read_index;
 reg read_ready;
 
 always @(posedge clk) begin
-    if (!(rst_n & user_rst_n[1])) begin
+    if (!(rst_n & user_rst_n[2])) begin
         r1_addr <= 4'b0;
         read_index <= 4'b0;
         read_ready <= 1'b1;
@@ -115,7 +115,7 @@ reg hsync_buf;
 reg vsync_buf;
 
 always @(posedge clk) begin
-    if (!(rst_n & user_rst_n[0])) begin
+    if (!(rst_n & user_rst_n[3])) begin
         pixel <= 1'b0;
     end else if (vga_blank) begin
         pixel <= 1'b0;
