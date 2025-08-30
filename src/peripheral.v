@@ -38,15 +38,13 @@ wire vga_hsync;
 wire vga_vsync;
 wire vga_blank;
 wire [2:0] counter;
-reg [3:0] pre_div;
+reg [3:0] clk_div;
 
 vga_timing vga (
     .clk,
     .rst_n,
     .cli(vga_cli),
-    .pre_div,
-    .clk_div(3'd3),
-    .pix_div(3'd4),
+    .clk_div,
     .x_pos(vga_x_pos),
     .y_pos(vga_y_pos),
     .hsync(vga_hsync),
@@ -58,10 +56,10 @@ vga_timing vga (
 
 always @(posedge clk) begin
     if (!rst_n) begin
-        pre_div <= 4'd9;
+        clk_div <= 4'd9;
     end else begin
         if (data_write_n == 2'b00) begin
-            pre_div <= data_in[3:0];
+            clk_div <= data_in[3:0];
         end
     end
 end
