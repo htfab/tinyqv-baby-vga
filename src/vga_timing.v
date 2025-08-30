@@ -51,13 +51,13 @@ always @(posedge clk) begin
         interrupt <= 0;
     end else begin
         counter <= counter + 1;
-        if (x_pix_lo == pix_div-1) begin
+        if (x_pix_lo == pix_div) begin
             x_pix_hi <= x_pix_hi + 1;
             x_pix_lo <= 0;
         end else begin
             x_pix_lo <= x_pix_lo + 1;
         end
-        if (x_clk_lo == clk_div-1) begin
+        if (x_clk_lo == clk_div) begin
             if (x_clk_hi == `H_NEXT) begin
                 x_clk_hi <= 0;
                 x_clk_lo <= 0;

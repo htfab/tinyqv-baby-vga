@@ -58,8 +58,8 @@ vga_timing vga (
 
 always @(posedge clk) begin
     if (!rst_n) begin
-        clk_div <= 6'd40;
-        pix_div <= 6'd50;
+        clk_div <= 6'd39;
+        pix_div <= 6'd49;
     end else begin
         if (data_write_n == 2'b01) begin
             clk_div <= data_in[5:0];
