@@ -24,9 +24,20 @@ wire clk_proj;
 wire pll_locked;
 
 pll #(
+    // 64 MHz
     .PREDIV(5),
     .MULT(48),
     .DIV(15)
+
+    // 25 MHz
+    //.PREDIV(4),
+    //.MULT(8),
+    //.DIV(8)
+
+    // 6.25 MHz
+    //.PREDIV(16),
+    //.MULT(8),
+    //.DIV(8)
 ) i_pll (
     .clk_in(clk),
     .clk_out(clk_proj),
