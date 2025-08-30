@@ -32,29 +32,41 @@ module tqvp_htfab_baby_vga (
 );
 
 wire vga_cli;
-wire [5:0] vga_x_hi;
-wire [4:0] vga_x_lo;
-wire [4:0] vga_y_hi;
-wire [5:0] vga_y_lo;
+wire [4:0] vga_x_pos;
+wire [3:0] vga_y_pos;
 wire vga_hsync;
 wire vga_vsync;
 wire vga_blank;
+wire [2:0] counter;
+reg [5:0] clk_div;
+reg [5:0] pix_div;
 
 vga_timing vga (
     .clk,
     .rst_n,
     .cli(vga_cli),
-    .x_hi(vga_x_hi),
-    .x_lo(vga_x_lo),
-    .y_hi(vga_y_hi),
-    .y_lo(vga_y_lo),
+    .clk_div,
+    .pix_div,
+    .x_pos(vga_x_pos),
+    .y_pos(vga_y_pos),
     .hsync(vga_hsync),
     .vsync(vga_vsync),
     .blank(vga_blank),
+    .counter(counter),
     .interrupt(user_interrupt)
 );
 
-wire [2:0] counter = vga_x_lo[2:0];
+always @(posedge clk) begin
+    if (!rst_n) begin
+        clk_div <= 6'd40;
+        pix_div <= 6'd50;
+    end else begin
+        if (data_write_n == 2'b01) begin
+            clk_div <= data_in[5:0];
+            pix_div <= data_in[13:8];
+        end
+    end
+end
 
 reg [3:0] r1_addr;
 wire [31:0] pixel_line;
@@ -64,7 +76,7 @@ framebuffer fb (
     .rst_n,
     .counter,
     .r1_addr,
-    .r2_addr(vga_y_hi[3:0]),
+    .r2_addr(vga_y_pos),
     .w_addr(address[5:2]),
     .data_in,
     .set_data(data_write_n == 2'b10),
@@ -112,7 +124,7 @@ always @(posedge clk) begin
     end else if (vga_blank) begin
         pixel <= 1'b0;
     end else begin
-        pixel <= pixel_line[vga_x_hi[4:0]];
+        pixel <= pixel_line[vga_x_pos];
     end
     hsync_buf <= vga_hsync;
     vsync_buf <= vga_vsync;
@@ -120,6 +132,6 @@ end
 
 assign uo_out = {hsync_buf, pixel, pixel, pixel, vsync_buf, pixel, pixel, pixel};
 
-wire _unused = &{ui_in, address[1:0], vga_x_hi[5], vga_x_lo[4:3], vga_y_hi[4], vga_y_lo, 1'b0};
+wire _unused = &{ui_in, address[1:0], 1'b0};
 
 endmodule
